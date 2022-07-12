@@ -1,5 +1,6 @@
 from Algorithms.Learner_Environment import *
 
+# To obtain the optimal reward (chiaroveggente)
 class Conv_rates(Learner):
     def __init__(self, n_arms):
         super().__init__(n_arms)

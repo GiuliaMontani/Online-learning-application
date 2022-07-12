@@ -1,4 +1,3 @@
-
 #Greedy Algorithm
 #Optimization of the cumulative EXPECTED margin over all the products
 

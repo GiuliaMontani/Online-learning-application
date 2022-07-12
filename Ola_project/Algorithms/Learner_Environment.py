@@ -27,7 +27,8 @@ class Environment:
         self.clicks_current_day = self.E.daily_clicks
         self.purchases_current_day = self.E.daily_purchases
         self.daily_units = self.E.daily_purchased_units
-
+        
+        # reward for each product
         reward = np.zeros(5)
         for i in range(5):
             if self.clicks_current_day[i]!=0:

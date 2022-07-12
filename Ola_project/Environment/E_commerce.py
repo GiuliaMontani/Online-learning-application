@@ -44,19 +44,19 @@ class E_commerce:
         self.daily_users.clear() 
 
 
-
+    # USED AT THE BEGINNING BUT NOW IS USELESS
     # graph with the probabilities to see the products 
     # 1 for the first secondary slot, lambda for the second one
-    def generate_graph(self, distribution):
-        graph = np.zeros((5,5))
-        for i in range(5):
-          # secondary slots indexes (0,1,2,3,4,5)-{i=primary}
-          j = np.random.choice([x for x in range(5) if x != i ],2, replace = False) 
-          # probability to see the first slot = 1
-          graph[i,j[0]] = distribution[i]
-          # 1 * lambda 
-          graph[i,j[1]] = distribution[i] * self.lambda_
-        return graph
+    # def generate_graph(self, distribution):
+    #     graph = np.zeros((5,5))
+    #     for i in range(5):
+    #       # secondary slots indexes (0,1,2,3,4,5)-{i=primary}
+    #       j = np.random.choice([x for x in range(5) if x != i ],2, replace = False) 
+    #       # probability to see the first slot = 1
+    #       graph[i,j[0]] = distribution[i]
+    #       # 1 * lambda 
+    #       graph[i,j[1]] = distribution[i] * self.lambda_
+    #     return graph
     
 
     # simulate a day of visits in the website
@@ -77,14 +77,12 @@ class E_commerce:
         for i in range(np.size(D.Users)):
             visit = self.visit(D.Users[i], fixed_units)
             Day.append(visit)
-            #for each user compute reward from the cart (sum of the margins of the products bought)
-            #and update the purchase counter for each product bought, the number of units and the daily rewards for each product
+            # compute and update all the variables that we will use in the algorithms
             for k in range(np.size(D.Users[i].cart)):          
                 rewards_of_the_day += self.products[D.Users[i].cart[k]].margin# * self.products[D.Users[i].cart[k]].margin #if we have units!=1
                 self.daily_purchases[D.Users[i].cart[k]] += 1
                 self.daily_purchased_units[D.Users[i].cart[k]] += D.Users[i].quantities[k]
-                self.daily_rewards_per_product[D.Users[i].cart[k]] += D.Users[i].quantities[k] * self.products[D.Users[i].cart[k]].margin
-            #for each user update count of the clicks 
+                self.daily_rewards_per_product[D.Users[i].cart[k]] += D.Users[i].quantities[k] * self.products[D.Users[i].cart[k]].margin 
             for z in range(np.size(D.Users[i].products_clicked)):
                 self.daily_clicks[D.Users[i].products_clicked[z]]+= 1
 
@@ -112,6 +110,8 @@ class E_commerce:
             return np.array([active_nodes])
 
         # Influence probability matrix of the products, for each user equal to the see probability*click probability
+        # obtain two products with non null probabilities that are the secondary product for each row
+        # i.e. every product has two secondary product
         prob_matrix = user.P * self.graph
         n_nodes = prob_matrix.shape[0]
         active_nodes = np.zeros(n_nodes)
@@ -173,8 +173,10 @@ class E_commerce:
         lambdas = np.array([2,1,3,3,1]) #theese are the mean (poisson) units sold for each product (when it is bought)
 
         #in the case of fixed units bought (always the same number of units is bought for each product), we take the mean (lambda) of the poisson
+        # Step3
         if fixed_units ==1:
             units = lambdas
+        # Step4
         else:
         #we don't want zeros (1+) (at least one units is bought)
             units = 1+np.random.poisson(lambdas-1,size=(1,5))[0]

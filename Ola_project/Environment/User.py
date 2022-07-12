@@ -34,8 +34,10 @@ class User0(User):
     def __init__(self, primary, fixed_weights):
         User.__init__(self, primary)
         self.reservation_price = [10,20,30,40,50]  + np.random.normal(1, scale=2, size=5) # average reservation price
+        # uncertain weight of the graph
         if fixed_weights!=1:
             self.P = User.generate_graph(self, np.random.uniform(0, 0.5, size=(5,5))) #lower influence probabilities
+        # known weight of the graph
         else:
             self.P = User.generate_graph(self, 
         np.array([[0.1612583 , 0.02990957, 0.0215376 , 0.27068635, 0.25147687],
@@ -43,6 +45,7 @@ class User0(User):
        [0.25435096, 0.32939066, 0.25589946, 0.18488915, 0.36627083],
        [0.27801728, 0.47490127, 0.33253022, 0.48659868, 0.42396207],
        [0.04359364, 0.45397953, 0.31312689, 0.41816953, 0.24363287]]))
+
 
 
 # curious buyer, more variable budget, higher probability to click on other products

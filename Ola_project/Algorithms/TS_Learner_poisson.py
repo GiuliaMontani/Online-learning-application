@@ -30,5 +30,6 @@ class TS_poisson(Learner):
             self.counter_per_arm[i][int(pulled_arm[i])] +=1
             self.expected_rewards[i][int(pulled_arm[i])] = (self.expected_rewards[i][int(pulled_arm[i])] * (self.counter_per_arm[i][int(pulled_arm[i])]-1) + reward[i]) / self.counter_per_arm[i][int(pulled_arm[i])]
             
+            # update the lambda only if you buy
             if purchases[i]!=0:
                 self.lambda_poisson[i][int(pulled_arm[i])] = (self.lambda_poisson[i][int(pulled_arm[i])]* (self.counter_per_arm[i][int(pulled_arm[i])]-1) + daily_units[i]/purchases[i])/ self.counter_per_arm[i][int(pulled_arm[i])] if self.lambda_poisson[i][int(pulled_arm[i])] > 0 else daily_units[i]/purchases[i]
