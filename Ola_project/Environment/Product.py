@@ -1,6 +1,15 @@
 class Product:
     # constructor
     def __init__(self, id_, price_list, margins_list):
+        """Product class
+
+        :param id_: product id (from 0 to 4)
+        :type id_: int
+        :param price_list: list with the prices of each product
+        :type price_list: list of float
+        :param margins_list: list with the margins of each product
+        :type margins_list: list of float
+        """
         self.id_ = id_
         # possible choices of price
         self.price_list = price_list
