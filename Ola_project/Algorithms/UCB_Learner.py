@@ -35,8 +35,8 @@ class UCB(Learner):
             # increasing the term make_comparable we get a longer exploration phase, but we have more accuracy in
             # choosing the best candidates
 
-            # idx[i] = np.argmax(upper_conf[i]) but in case of two maximum
-            idx[i] = np.random.choice(np.argwhere(upper_conf[i] == upper_conf[i].max()).reshape(-1))
+            # idx[i] = np.argmax(upper_conf[i]) #but in case of two maximum
+            idx[i] = np.random.choice(np.argwhere(upper_conf[i] == upper_conf[i].max()).reshape(-1))  # 2x slower
 
         return idx
 

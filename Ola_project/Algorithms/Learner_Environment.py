@@ -4,14 +4,13 @@ from Environment.E_commerce import *
 
 class Environment:
 
-    def __init__(self, n_arms, E_commerce, margins_matrix, num_users, binary_vector, fixed_alpha, fixed_weights,
+    def __init__(self, n_arms, E_commerce, margins_matrix, num_users, fixed_alpha, fixed_weights,
                  fixed_units):
         self.n_arms = n_arms
         self.E = E_commerce
         self.clicks_current_day = 0  # each day (round) they reset
         self.purchases_current_day = 0  # each day (round) they reset
         self.num_users = num_users
-        self.binary_vector = binary_vector  # defines the class of users
         self.fixed_alpha = fixed_alpha  # flag for the alpha ratios uncertainity
         self.margins_matrix = margins_matrix
         self.fixed_weights = fixed_weights
@@ -30,7 +29,7 @@ class Environment:
             self.E.products[i].change_price(int(pulled_arm[i]))
 
         # Reward is given thanks to the simulation of a day in the E-commerce website
-        self.E.simulate_day(self.num_users, self.binary_vector, self.fixed_alpha, self.fixed_weights, self.fixed_units)
+        self.E.simulate_day(self.num_users, self.fixed_alpha, self.fixed_weights, self.fixed_units)
         self.clicks_current_day = self.E.daily_clicks
         self.purchases_current_day = self.E.daily_purchases
         self.daily_units = self.E.daily_purchased_units

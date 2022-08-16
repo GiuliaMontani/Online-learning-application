@@ -14,7 +14,7 @@ class E_commerce:
         self.time_history = []
         # probability that the user checks the second product
         self.lambda_ = 0.5
-        # weight of the graph with the probabilities to see a secondary product given the primary
+        # weight of the graph: 1 for the first secondary and lambda for the second secondary
         self.graph = np.array(
             [[0., self.lambda_, 0., 1., 0.],
              [1., 0., 0., self.lambda_, 0.],
@@ -61,13 +61,11 @@ class E_commerce:
     #     return graph
 
     # simulate a day of visits in the website
-    def simulate_day(self, number_users, binary_vector, fixed_alpha, fixed_weights, fixed_units, binary_features=0, alpha=np.ones(5)):
+    def simulate_day(self, number_users, fixed_alpha, fixed_weights, fixed_units, binary_features=1):
         """This function simulate a day of visits in the website
 
         :param number_users: average number of potential users in a day
         :type number_users: int
-        :param binary_vector: type of user (0,1 or 2)
-        :type binary_vector: int
         :param fixed_alpha: 1 if alpha is fixed (uniformly distributed over the products)
         :type fixed_alpha: bool
         :param fixed_weights: 1 if alpha is fixed
@@ -81,9 +79,8 @@ class E_commerce:
 
         """
 
-        num_users = int(np.random.normal(number_users, scale=0.2 * number_users, size=1))  # drawn from a gaussian
         D = Daily_Customers()
-        D.UsersGenerator(num_users, binary_vector, fixed_alpha, alpha, fixed_weights, binary_features)
+        D.UsersGenerator(number_users, fixed_alpha, fixed_weights, binary_features)
         self.daily_users.append(D.Users)
 
         rewards_of_the_day = 0
@@ -213,6 +210,9 @@ class E_commerce:
         else:
             # we don't want zeros (1+) (at least one units is bought)
             units = 1 + np.random.poisson(lambdas - 1, size=(1, 5))[0]
+
+            # NOTE: for lambda-1=0, the probability to obtain something different from 0(+1) is null
+            # otterremo sempre 1 prodotto (quando comprano) per il secondo e il quinto prodotto
 
         if len(history_purchase) != 0:
             for i in range(len(history_purchase)):

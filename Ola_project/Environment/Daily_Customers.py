@@ -5,13 +5,14 @@ from Environment.User import *
 # Each day we have a list of users who enter the website, distributed with respect to their classes
 class Daily_Customers:
     # constructor
-    def __init__(self):
+    def __init__(self, percentage=[0.3,0.4,0.3]):
         self.Users = []
+        self.users_distribution = percentage
 
-    def whichUser(self, binary_vector, primary, fixed_weights, binary_features):
+    def whichUser(self, type_user, primary, fixed_weights, binary_features):
         """add a User to the Daily Customers based on its type
 
-        :param binary_vector: type of user (0,1 or 2)
+        :param type_user: type of user (0,1 or 2)
         :param primary: primary product which is shown
         :param fixed_weights: 1 if alpha is fixed
         :param binary_features: 1 if we do not distinguish between users (STEP 1)
@@ -20,42 +21,70 @@ class Daily_Customers:
 
         if binary_features == 1:
 
-            if np.sum(binary_vector == 0):
+            if type_user == 0:
                 self.Users.append(User0(primary, fixed_weights))
-            elif np.sum(binary_vector == 1):
+            elif type_user == 1:
                 self.Users.append(User1(primary, fixed_weights))
-            elif np.sum(binary_vector == 2):
+            elif type_user == 2:
                 self.Users.append(User2(primary, fixed_weights))
 
         # if the weights are fixed -> users have the same graph with the click probabilities
         else:
-            self.Users.append(homogeneous_users(primary, fixed_weights))
+            self.Users.append(HomogeneousUsers(primary, fixed_weights))
 
-    def UsersGenerator(self, num_users, binary_vector, fixed_alpha, fixed_weights, binary_features, alpha=np.ones(5)):
+    def UsersGenerator(self, number_users, fixed_alpha, fixed_weights, binary_features):
         """Generate daily users choosing which product they see first (if they arrive at the website) based on their
         type.
 
-        :param num_users: average number of potential users in a day
-        :type num_users: int
-        :param binary_vector: type of user (0,1 or 2)
-        :type binary_vector: int
+        :param number_users: average number of potential users in a day
+        :type number_users: int
         :param fixed_alpha: 1 if alpha is fixed (uniformly distributed over the products)
         :type fixed_alpha: bool
         :param fixed_weights: 1 if alpha is fixed
         :type fixed_weights: bool
-        :param binary_features: 1 if we do not distinguish between users (STEP 1)
+        :param binary_features: 1 if we distinguish between user's types (STEP 1)
         :type binary_features: bool
-        :param alpha: vector with dirichlet parameters, by default each
 
         """
-        # create "alpha_ratio * num_users" users, without the alpha_0 in competitor website
-        users_per_product = np.random.multinomial(num_users, np.random.dirichlet(alpha))
-        # <--- QUI NON STIAMO CONSIDERANDO QUELLI CHE VANNO DAI CONCORRENTI
 
-        # if alpha are not uncertain. we suppose users are equally distributed
-        if fixed_alpha == 1:
+        # if alpha are not uncertain, we suppose users are equally distributed (ASSUMPTION)
+        if fixed_alpha == 1 and binary_features == 0:
+            num_users = int(np.random.normal(number_users, scale=0.2 * number_users, size=1))  # drawn from a gaussian
             users_per_product = np.ones(5) * round(num_users / 5)
-        for i in range(len(users_per_product)):
-            for j in range(int(users_per_product[i])):
-                self.whichUser(binary_vector, i, fixed_weights,
+
+        if binary_features == 1:  # fixed_alpha == 0
+            for type_user in range(3):
+
+                if fixed_alpha == 1:
+                    num_users = int(
+                        np.random.normal(number_users*self.users_distribution[type_user], scale=0.2 * number_users*self.users_distribution[type_user], size=1))  # drawn from a gaussian
+                    users_per_product = np.ones(5) * round(num_users / 5)
+                else:
+                    num_users = int(np.random.normal(number_users*self.users_distribution[type_user], scale=0.2 * number_users*self.users_distribution[type_user], size=1))  # drawn from a gaussian
+
+                    if type_user == 0:
+                        alpha = User0.alpha
+                    elif type_user == 1:
+                        alpha = User1.alpha
+                    elif type_user == 2:
+                        alpha = User2.alpha
+
+                    users_per_product = np.random.multinomial(num_users, np.random.dirichlet(alpha))  # ho tolto alpha0
+                    # create "alpha_ratio * num_users" users, without the alpha_0 in competitor website
+                    # <--- QUI NON STIAMO CONSIDERANDO QUELLI CHE VANNO DAI CONCORRENTI
+
+                for i in range(len(users_per_product)):  # for each product
+                    # for j in range(int(users_per_product[i])):  # for each user
+                    self.whichUser(type_user, i, fixed_weights,
+                                   binary_features)  # i is the index of the primary product
+
+        else:  # fixed_alpha == 0
+            alpha = HomogeneousUsers.alpha
+            num_users = int(np.random.normal(number_users, scale=0.2 * number_users,
+                                             size=1))  # drawn from a gaussian
+            users_per_product = np.random.multinomial(num_users, np.random.dirichlet(alpha))
+            for i in range(len(users_per_product)):  # for each product
+                # for j in range(int(users_per_product[i])):  # for each user
+                self.whichUser(-1, i, fixed_weights,
                                binary_features)  # i is the index of the primary product
+

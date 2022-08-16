@@ -35,6 +35,8 @@ class User:
 
 # targeted buyer, lower probability to click other products after the first
 class User0(User):
+    alpha = [0.2, 0.2, 0.2, 0.2, 0.2]
+
     def __init__(self, primary, fixed_weights):
         User.__init__(self, primary)
         self.reservation_price = [10, 20, 30, 40, 50] + np.random.normal(1, scale=2,
@@ -54,6 +56,8 @@ class User0(User):
 
 # curious buyer, more variable budget, higher probability to click on other products
 class User1(User):
+    alpha = [0.2, 0.2, 0.2, 0.2, 0.2]
+
     def __init__(self, primary, fixed_weights):
         User.__init__(self, primary)
         self.reservation_price = [10, 20, 30, 40, 50] + np.random.normal(1, scale=4,
@@ -71,6 +75,8 @@ class User1(User):
 
 # buyer with higher budget 
 class User2(User):
+    alpha = [0.2, 0.2, 0.2, 0.2, 0.2]
+
     def __init__(self, primary, fixed_weights):
         User.__init__(self, primary)
         self.reservation_price = [15, 25, 35, 45, 55] + np.random.normal(1, scale=3, size=5)  # higher reservation price
@@ -87,7 +93,9 @@ class User2(User):
 
 
 # homogenous user class (used in the first steps)
-class homogeneous_users(User):
+class HomogeneousUsers(User):
+    alpha = [0.2, 0.2, 0.2, 0.2, 0.2]
+
     def __init__(self, primary, fixed_weights):
         User.__init__(self, primary)
         self.reservation_price = [10, 23, 35, 41, 54] + np.random.normal(0, scale=2, size=5)  # small variance
