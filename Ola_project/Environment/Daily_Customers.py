@@ -42,7 +42,7 @@ class Daily_Customers:
         :type fixed_alpha: bool
         :param fixed_weights: 1 if alpha is fixed
         :type fixed_weights: bool
-        :param binary_features: 1 if we distinguish between user's types (STEP 1)
+        :param binary_features: 1 if we distinguish between user's types, 0 if not
         :type binary_features: bool
 
         """
@@ -59,6 +59,7 @@ class Daily_Customers:
                     num_users = int(
                         np.random.normal(number_users*self.users_distribution[type_user], scale=0.2 * number_users*self.users_distribution[type_user], size=1))  # drawn from a gaussian
                     users_per_product = np.ones(5) * round(num_users / 5)
+                    # users_per_product = np.random.multinomial(num_users, alpha)
                 else:
                     num_users = int(np.random.normal(number_users*self.users_distribution[type_user], scale=0.2 * number_users*self.users_distribution[type_user], size=1))  # drawn from a gaussian
 
@@ -68,7 +69,8 @@ class Daily_Customers:
                         alpha = User1.alpha
                     elif type_user == 2:
                         alpha = User2.alpha
-
+                    #  media = np.random.dirichlet(alpha)  #alpha ha 6 elem
+                    #  users_per_product = np.random.multinomial(num_users, np.random.dirichlet(alpha[1:6]))
                     users_per_product = np.random.multinomial(num_users, np.random.dirichlet(alpha))  # ho tolto alpha0
                     # create "alpha_ratio * num_users" users, without the alpha_0 in competitor website
                     # <--- QUI NON STIAMO CONSIDERANDO QUELLI CHE VANNO DAI CONCORRENTI

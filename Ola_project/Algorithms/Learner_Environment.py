@@ -17,6 +17,7 @@ class Environment:
         self.daily_units = np.zeros(5)
         self.fixed_units = fixed_units
 
+
     def round(self, pulled_arm):
         """For each product, it changes the price corresponding to the pulled arm
 
