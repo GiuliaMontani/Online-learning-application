@@ -5,7 +5,10 @@ from Environment.Product import *
 
 class E_commerce:
     # constructor
-    def __init__(self):
+    def __init__(self, binary_features=1):
+        """ E-commerce class.
+        :param binary_features: 1 if we distinguish between users
+        """
         # list of products
         self.products = []
         # list of lists of users
@@ -30,6 +33,8 @@ class E_commerce:
         self.daily_rewards_per_product = []
         # daily purchased units per product
         self.daily_purchased_units = []
+        # binary_features: 1 if we do not distinguish between users
+        self.binary_features = binary_features
 
     def set_lambda(self, new_lambda):
         self.lambda_ = new_lambda
@@ -61,7 +66,7 @@ class E_commerce:
     #     return graph
 
     # simulate a day of visits in the website
-    def simulate_day(self, number_users, fixed_alpha, fixed_weights, fixed_units, binary_features=1):
+    def simulate_day(self, number_users, fixed_alpha, fixed_weights, fixed_units):
         """This function simulate a day of visits in the website
 
         :param number_users: average number of potential users in a day
@@ -72,15 +77,13 @@ class E_commerce:
         :type fixed_weights: bool
         :param fixed_units: if 1 always the same number of units is bought for each product
         :type fixed_units: bool
-        :param binary_features: 1 if we do not distinguish between users (STEP 1)
-        :type binary_features: bool
         :param alpha: vector with dirichlet parameters
         :return: a Daily_Customers class
 
         """
 
         D = Daily_Customers()
-        D.UsersGenerator(number_users, fixed_alpha, fixed_weights, binary_features)
+        D.UsersGenerator(number_users, fixed_alpha, fixed_weights, self.binary_features)
         self.daily_users.append(D.Users)
 
         rewards_of_the_day = 0
