@@ -23,15 +23,12 @@ class Greedy(Learner):
         for i in range(5):
             # probability of selecting a random price
             p = np.random.random()
-            # idxs = np.argwhere(self.greedy_rewards[i] == self.greedy_rewards[i].max()).reshape(-1)
             if p < self.epsilon:
                 idx[i] = np.random.choice(self.n_arms)
             else:
                 # idx[i] = np.argmax(self.expected_rewards[i])
                 idxs = np.argwhere(self.expected_rewards[i] == self.expected_rewards[i].max()).reshape(-1)
                 idx[i] = np.random.choice(idxs)
-
-
 
         return idx
 
