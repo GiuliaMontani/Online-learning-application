@@ -1,16 +1,19 @@
 from Algorithms.Learner_Environment import *
 
-from Algorithms.Learner_Environment import *
-
 
 class UCB(Learner):
-    def __init__(self, n_arms):
+    def __init__(self, n_arms, c=2):
+        """UCB Learner algorithm.
+
+        :param n_arms: number of arms
+        :param c: confidence value (in class it was 2)
+        """
         super().__init__(n_arms)
         self.expected_rewards = np.zeros([5, n_arms])
         self.confidence = np.array(([[np.inf] * n_arms] * 5))
         self.make_comparable = np.zeros(5)
         self.explore = np.array([0, 1, 2, 3, 0, 1, 2, 3])
-        self.c = 2
+        self.c = c
 
     def pull_arm(self):
         # first exploration phase

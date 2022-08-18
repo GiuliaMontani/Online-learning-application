@@ -25,6 +25,14 @@ class TS_poisson(Learner):
         return idx
 
     def update(self, pulled_arm, reward, clicks, purchases, daily_units):
+        """ Update beta and lambda parameters.
+
+        :param pulled_arm: which price was pulled
+        :param reward: reward associated
+        :param clicks: number of daily clicks
+        :param purchases: number of purchases
+        :param daily_units: number of bought products
+        """
         self.t += 1
         self.update_observations(pulled_arm, reward)
         for i in range(5):
