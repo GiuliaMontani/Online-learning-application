@@ -1,7 +1,8 @@
 from Algorithms.UCB_Learner import *
+from Algorithms.cdt import CUSUM
 
 
-class CD_UCB(UCB):
+class CD1_UCB(UCB):
     def __init__(self, n_arms, c=2, epsilon=0.2):
         """Change-Detection based UCB (CD-UCB). Look at change_detection.pdf
         I am not sure to have really understood paper's equation 5
@@ -44,3 +45,39 @@ class CD_UCB(UCB):
                 idx[i] = np.random.choice(np.argwhere(upper_conf[i] == upper_conf[i].max()).reshape(-1))  # 2x slower
 
         return idx
+
+class CD2_UCB(UCB):
+    def __init__(self, n_arms, c=2, M=30, eps=0.05, h=10):
+        """ (CUSUM) Change-Detection based UCB. Look at change_detection.pdf algorithm 3
+        I am not sure to have really understood well the paper
+        :param n_arms: number of arms
+        :param M: initialization of CUSUM
+        :param eps: minimum expected mean variation
+        :param h: threshold for the CUSUM walk
+        :param c: constant of UCB
+        """
+
+        super().__init__(n_arms, c)
+        self.M = M
+        self.detector = [CUSUM(M, eps, h) for _ in range(n_arms)]
+        self.detections = [[] for _ in range(n_arms)]
+
+    def update(self, pulled_arm, reward):
+        super().update(pulled_arm, reward)
+        # update the mean of the arm we pulled
+        #self.means[pulled_arm] = self.tot_sales[arm_pulled] / self.tot_clicks[pulled_arm]
+
+        if self.detector[pulled_arm].run(reward):
+            self.reset_arm(pulled_arm)
+            self.detections[pulled_arm].append(self.t)
+
+    def reset_arm(self, arm):
+        #self.means[arm] = 0
+        self.confidence[arm] = np.inf
+        #self.tot_clicks[arm] = 0
+        #self.tot_sales[arm] = 0
+        self.expected_rewards = 0
+        self.detector[arm].reset()
+
+
+
