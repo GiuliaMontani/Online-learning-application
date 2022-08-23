@@ -69,9 +69,11 @@ class CUSUM_UCB(UCB):
         super().update(pulled_arm, reward)
         # update the mean of the arm we pulled
         # self.means[pulled_arm] = self.tot_sales[arm_pulled] / self.tot_clicks[pulled_arm]
+        print('pulled arm:', pulled_arm)
         for i in range(5):
             self.rewards_per_arm[i][int(pulled_arm[i])].append(reward[i])
             #print('estimated probability ', purchases[i] / clicks[i])
+            print('running CUSUM algorithm on product',i,'arm',int(pulled_arm[i]))
             if self.detector[i][int(pulled_arm[i])].run(int(purchases[i]), int(clicks[i])):
                 print('------> detected change <-------')
                 self.reset_arm(i,int(pulled_arm[i]))

@@ -2,8 +2,9 @@ import numpy as np
 import random
 
 
-# superclass
 class User:
+    # for each class of users, i have an average reservation price
+    avg_reservation_price = []
     # constructor
     def __init__(self, primary):
         # for each product a user has a reservation price
@@ -19,6 +20,7 @@ class User:
         # primary product shown
         self.primary = primary  # {0,1,2,3,4}
 
+
     def generate_graph(self, distribution):
         """ Generate the graph with the click probabilities on the products.
 
@@ -29,17 +31,17 @@ class User:
         graph = distribution
         return graph
 
-
-# Inheritance
+    # Inheritance
 # 3 classes of users:
 
 # targeted buyer, lower probability to click other products after the first
 class User0(User):
     alpha = [0.2, 0.2, 0.2, 0.2, 0.2]
+    avg_reservation_price = np.array([10, 20, 30, 40, 50])
 
     def __init__(self, primary, fixed_weights):
         User.__init__(self, primary)
-        self.reservation_price = [10, 20, 30, 40, 50] + np.random.normal(1, scale=2,
+        self.reservation_price = self.avg_reservation_price + np.random.normal(1, scale=2,
                                                                          size=5)  # average reservation price
         # uncertain weight of the graph
         if fixed_weights != 1:
@@ -54,13 +56,15 @@ class User0(User):
                                                    [0.04359364, 0.45397953, 0.31312689, 0.41816953, 0.24363287]]))
 
 
+
 # curious buyer, more variable budget, higher probability to click on other products
 class User1(User):
     alpha = [0.2, 0.2, 0.2, 0.2, 0.2]
+    avg_reservation_price = [10, 20, 30, 40, 50]
 
     def __init__(self, primary, fixed_weights):
         User.__init__(self, primary)
-        self.reservation_price = [10, 20, 30, 40, 50] + np.random.normal(1, scale=4,
+        self.reservation_price = self.avg_reservation_price + np.random.normal(1, scale=4,
                                                                          size=5)  # more variable reservation price
         if fixed_weights != 1:
             self.P = User.generate_graph(self, np.random.uniform(0.2, 1, size=(5, 5)))  # higher influence probabilities
@@ -76,10 +80,11 @@ class User1(User):
 # buyer with higher budget 
 class User2(User):
     alpha = [0.2, 0.2, 0.2, 0.2, 0.2]
+    avg_reservation_price = [15, 25, 35, 45, 55]
 
     def __init__(self, primary, fixed_weights):
         User.__init__(self, primary)
-        self.reservation_price = [15, 25, 35, 45, 55] + np.random.normal(1, scale=3, size=5)  # higher reservation price
+        self.reservation_price = self.avg_reservation_price + np.random.normal(1, scale=3, size=5)  # higher reservation price
         if fixed_weights != 1:
             self.P = User.generate_graph(self,
                                          np.random.uniform(0, 1, size=(5, 5)))  # more variable influence probabilities
