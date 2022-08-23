@@ -1,9 +1,9 @@
 from Algorithms.UCB_Learner import *
-from Algorithms.cdt import CUSUM
+from Algorithms.cdt import CUSUM2
 
 
 class CD1_UCB(UCB):
-    def __init__(self, n_arms, c=2, epsilon=0.2):
+    def __init__(self, n_arms, c=2, alpha=0.2):
         """Change-Detection based UCB (CD-UCB). Look at change_detection.pdf
         I am not sure to have really understood paper's equation 5
         :param n_arms:
@@ -11,7 +11,7 @@ class CD1_UCB(UCB):
         :param epsilon:
         """
         super().__init__(n_arms, c)
-        self.epsilon = epsilon
+        self.alpha = alpha
 
     def pull_arm(self):
         # first exploration phase
@@ -32,11 +32,11 @@ class CD1_UCB(UCB):
         for i in range(5):
             # probability of selecting a random price
             p = np.random.random()
-            if p < self.epsilon:
+            if p < self.alpha:
                 idx[i] = np.random.choice(self.n_arms)
             else:
-            # confidence is multiplied by np.max(self.expected_rewards[i]) to make the upper confidence bound
-            # comparable (some have too much higher expected rewards) ???
+                # confidence is multiplied by np.max(self.expected_rewards[i]) to make the upper confidence bound
+                # comparable (some have too much higher expected rewards) ???
                 upper_conf[i] = self.expected_rewards[i] + self.confidence[i] * self.make_comparable[i]
                 # increasing the term make_comparable we get a longer exploration phase, but we have more accuracy in
                 # choosing the best candidates
@@ -46,8 +46,9 @@ class CD1_UCB(UCB):
 
         return idx
 
-class CD2_UCB(UCB):
-    def __init__(self, n_arms, c=2, M=30, eps=0.05, h=10):
+
+class CUSUM_UCB(UCB):
+    def __init__(self, n_arms, c=2, M=5, eps=0.05, h=10):
         """ (CUSUM) Change-Detection based UCB. Look at change_detection.pdf algorithm 3
         I am not sure to have really understood well the paper
         :param n_arms: number of arms
@@ -59,25 +60,30 @@ class CD2_UCB(UCB):
 
         super().__init__(n_arms, c)
         self.M = M
-        self.detector = [CUSUM(M, eps, h) for _ in range(n_arms)]
-        self.detections = [[] for _ in range(n_arms)]
+        # self.detector = [CUSUM(M, eps, h) for _ in range(n_arms)]
+        self.detector = [[CUSUM2(M, eps, h) for _ in range(n_arms)] for _ in range(5)]
+        # self.detections = [[] for _ in range(n_arms)]
+        self.detections = [[[] for _ in range(n_arms)] for _ in range(5)]
 
-    def update(self, pulled_arm, reward):
+    def update(self, pulled_arm, reward, purchases,clicks ):
         super().update(pulled_arm, reward)
         # update the mean of the arm we pulled
-        #self.means[pulled_arm] = self.tot_sales[arm_pulled] / self.tot_clicks[pulled_arm]
-
-        if self.detector[pulled_arm].run(reward):
-            self.reset_arm(pulled_arm)
-            self.detections[pulled_arm].append(self.t)
-
-    def reset_arm(self, arm):
-        #self.means[arm] = 0
-        self.confidence[arm] = np.inf
-        #self.tot_clicks[arm] = 0
-        #self.tot_sales[arm] = 0
-        self.expected_rewards = 0
-        self.detector[arm].reset()
+        # self.means[pulled_arm] = self.tot_sales[arm_pulled] / self.tot_clicks[pulled_arm]
+        for i in range(5):
+            self.rewards_per_arm[i][int(pulled_arm[i])].append(reward[i])
+            print('estimated probability ', purchases[i] / clicks[i])
+            if self.detector[i][int(pulled_arm[i])].run(int(purchases[i]), int(clicks[i])):
+                print('detected change')
+                self.reset_arm(int(pulled_arm[i]))
+                self.detections[int(pulled_arm[i])].append(self.t)
 
 
 
+    def reset_arm(self, product, arm):
+        print('resetting pr.',product, ', arm', arm)
+        # self.means[arm] = 0
+        self.confidence[product][arm] = np.inf
+        # self.tot_clicks[arm] = 0
+        # self.tot_sales[arm] = 0
+        self.expected_rewards[product] = 0
+        self.detector[product][arm].reset()

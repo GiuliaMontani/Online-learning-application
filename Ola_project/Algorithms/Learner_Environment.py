@@ -42,6 +42,21 @@ class Environment:
                 reward[i] = self.E.daily_rewards_per_product[i] / self.clicks_current_day[i]
         return reward
 
+    def abrupt_change(self, changing_users, percentage):
+        print ("Abrupt change")
+        for user in changing_users:
+            if user == 0:
+                User0.avg_reservation_price = percentage*User0.avg_reservation_price
+                print('class User 0 has changed: its new average reservation price is', User0.avg_reservation_price)
+            if user == 1:
+                User1.avg_reservation_price = percentage*User1.avg_reservation_price
+                print('class User 1 has changed: its new average reservation price is', User1.avg_reservation_price)
+            if user == 2:
+                User2.avg_reservation_price = percentage*User2.avg_reservation_price
+                print('class User 2 has changed: its new average reservation price is', User2.avg_reservation_price)
+
+
+
 
 class Learner:
     def __init__(self, n_arms):
