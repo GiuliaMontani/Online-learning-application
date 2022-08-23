@@ -71,16 +71,16 @@ class CUSUM_UCB(UCB):
         # self.means[pulled_arm] = self.tot_sales[arm_pulled] / self.tot_clicks[pulled_arm]
         for i in range(5):
             self.rewards_per_arm[i][int(pulled_arm[i])].append(reward[i])
-            print('estimated probability ', purchases[i] / clicks[i])
+            #print('estimated probability ', purchases[i] / clicks[i])
             if self.detector[i][int(pulled_arm[i])].run(int(purchases[i]), int(clicks[i])):
-                print('detected change')
-                self.reset_arm(int(pulled_arm[i]))
+                print('------> detected change <-------')
+                self.reset_arm(i,int(pulled_arm[i]))
                 self.detections[int(pulled_arm[i])].append(self.t)
 
 
 
     def reset_arm(self, product, arm):
-        print('resetting pr.',product, ', arm', arm)
+        #print('resetting pr.',product, ', arm', arm)
         # self.means[arm] = 0
         self.confidence[product][arm] = np.inf
         # self.tot_clicks[arm] = 0

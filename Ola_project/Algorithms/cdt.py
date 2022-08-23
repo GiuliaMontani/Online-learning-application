@@ -200,8 +200,8 @@ class CUSUM2:
                 self.g_increase = max(0, self.g_increase + s_increase)
                 self.g_decrease = max(0, self.g_decrease + s_decrease)
 
-            print(self.g_increase)
-            print(self.g_decrease)
+            print('g_increase',self.g_increase)
+            print('g_decrease',self.g_decrease)
 
         '''
         self.g_increase = max(0., self.g_increase + s_increase)
