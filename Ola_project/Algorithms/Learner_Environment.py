@@ -2,6 +2,12 @@ import numpy as np
 from Environment.E_commerce import *
 
 
+def reset_users_reserv_prices():
+    User0.reset_avg_reservation_price()
+    User1.reset_avg_reservation_price()
+    User2.reset_avg_reservation_price()
+
+
 class Environment:
 
     def __init__(self, n_arms, E_commerce, margins_matrix, num_users, fixed_alpha, fixed_weights,
@@ -16,7 +22,7 @@ class Environment:
         self.fixed_weights = fixed_weights
         self.daily_units = np.zeros(5)
         self.fixed_units = fixed_units
-
+        reset_users_reserv_prices()
 
     def round(self, pulled_arm):
         """For each product, it changes the price corresponding to the pulled arm
@@ -43,19 +49,17 @@ class Environment:
         return reward
 
     def abrupt_change(self, changing_users, percentage):
-        print ("Abrupt change")
+        print("Abrupt change")
         for user in changing_users:
             if user == 0:
-                User0.avg_reservation_price = percentage*User0.avg_reservation_price
+                User0.avg_reservation_price = percentage * User0.avg_reservation_price
                 print('class User 0 has changed: its new average reservation price is', User0.avg_reservation_price)
             if user == 1:
-                User1.avg_reservation_price = percentage*User1.avg_reservation_price
+                User1.avg_reservation_price = percentage * User1.avg_reservation_price
                 print('class User 1 has changed: its new average reservation price is', User1.avg_reservation_price)
             if user == 2:
-                User2.avg_reservation_price = percentage*User2.avg_reservation_price
+                User2.avg_reservation_price = percentage * User2.avg_reservation_price
                 print('class User 2 has changed: its new average reservation price is', User2.avg_reservation_price)
-
-
 
 
 class Learner:
