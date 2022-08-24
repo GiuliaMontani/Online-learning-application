@@ -39,6 +39,10 @@ class User0(User):
     alpha = [0.2, 0.2, 0.2, 0.2, 0.2]
     avg_reservation_price = np.array([10, 20, 30, 40, 50])
 
+    @staticmethod
+    def reset_avg_reservation_price():
+        User0.avg_reservation_price = np.array([10, 20, 30, 40, 50])
+
     def __init__(self, primary, fixed_weights):
         User.__init__(self, primary)
         self.reservation_price = self.avg_reservation_price + np.random.normal(1, scale=2,
@@ -62,6 +66,10 @@ class User1(User):
     alpha = [0.2, 0.2, 0.2, 0.2, 0.2]
     avg_reservation_price = [10, 20, 30, 40, 50]
 
+    @staticmethod
+    def reset_avg_reservation_price():
+        User1.avg_reservation_price = [10, 20, 30, 40, 50]
+
     def __init__(self, primary, fixed_weights):
         User.__init__(self, primary)
         self.reservation_price = self.avg_reservation_price + np.random.normal(1, scale=4,
@@ -81,6 +89,10 @@ class User1(User):
 class User2(User):
     alpha = [0.2, 0.2, 0.2, 0.2, 0.2]
     avg_reservation_price = [15, 25, 35, 45, 55]
+
+    @staticmethod
+    def reset_avg_reservation_price():
+        User2.avg_reservation_price = [15, 25, 35, 45, 55]
 
     def __init__(self, primary, fixed_weights):
         User.__init__(self, primary)
