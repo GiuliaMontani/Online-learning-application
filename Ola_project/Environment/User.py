@@ -41,9 +41,7 @@ class User0(User):
 
     @staticmethod
     def reset_avg_reservation_price():
-        # User0.avg_reservation_price = np.array([10, 20, 30, 40, 50])
         User0.avg_reservation_price = np.array([10, 20, 30, 40, 50])
-
 
     def __init__(self, primary, fixed_weights):
         User.__init__(self, primary)
@@ -70,7 +68,7 @@ class User1(User):
 
     @staticmethod
     def reset_avg_reservation_price():
-        User1.avg_reservation_price = np.array([10, 20, 30, 40, 50])
+        User1.avg_reservation_price = [10, 20, 30, 40, 50]
 
     def __init__(self, primary, fixed_weights):
         User.__init__(self, primary)
@@ -94,7 +92,7 @@ class User2(User):
 
     @staticmethod
     def reset_avg_reservation_price():
-        User2.avg_reservation_price = np.array([15, 25, 35, 45, 55])
+        User2.avg_reservation_price = [15, 25, 35, 45, 55]
 
     def __init__(self, primary, fixed_weights):
         User.__init__(self, primary)
@@ -114,10 +112,6 @@ class User2(User):
 # homogenous user class (used in the first steps)
 class HomogeneousUsers(User):
     alpha = [0.2, 0.2, 0.2, 0.2, 0.2]
-
-    @staticmethod
-    def reset_avg_reservation_price():
-        HomogeneousUsers.avg_reservation_price = np.array([15, 25, 35, 45, 55])
 
     def __init__(self, primary, fixed_weights):
         User.__init__(self, primary)
