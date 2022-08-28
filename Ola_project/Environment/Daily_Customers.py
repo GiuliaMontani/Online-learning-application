@@ -52,7 +52,7 @@ class Daily_Customers:
             num_users = int(np.random.normal(number_users, scale=0.2 * number_users, size=1))  # drawn from a gaussian
             users_per_product = np.ones(5) * round(num_users / 5)
 
-        if binary_features == 1:  # fixed_alpha == 0
+        if binary_features == 1:
             for type_user in range(3):
 
                 if fixed_alpha == 1:
@@ -60,7 +60,7 @@ class Daily_Customers:
                         np.random.normal(number_users*self.users_distribution[type_user], scale=0.2 * number_users*self.users_distribution[type_user], size=1))  # drawn from a gaussian
                     users_per_product = np.ones(5) * round(num_users / 5)
                     # users_per_product = np.random.multinomial(num_users, alpha)
-                else:
+                else:  # fixed_alpha == 0
                     num_users = int(np.random.normal(number_users*self.users_distribution[type_user], scale=0.2 * number_users*self.users_distribution[type_user], size=1))  # drawn from a gaussian
 
                     if type_user == 0:
@@ -80,7 +80,7 @@ class Daily_Customers:
                     self.whichUser(type_user, i, fixed_weights,
                                    binary_features)  # i is the index of the primary product
 
-        else:  # fixed_alpha == 0
+        if fixed_alpha == 0 and binary_features == 0:
             alpha = HomogeneousUsers.alpha
             num_users = int(np.random.normal(number_users, scale=0.2 * number_users,
                                              size=1))  # drawn from a gaussian
