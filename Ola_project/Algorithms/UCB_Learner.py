@@ -1,4 +1,4 @@
-from Algorithms.Learner_Environment import *
+from Learner_Environment import *
 
 
 class UCB(Learner):

@@ -1,11 +1,11 @@
 import numpy as np
-from Environment.User import *
+from User import *
 
 
 # Each day we have a list of users who enter the website, distributed with respect to their classes
 class Daily_Customers:
     # constructor
-    def __init__(self, percentage=[0.3,0.4,0.3]):
+    def __init__(self, percentage=[0.3, 0.4, 0.3]):
         self.Users = []
         self.users_distribution = percentage
 
@@ -80,7 +80,7 @@ class Daily_Customers:
                     self.whichUser(type_user, i, fixed_weights,
                                    binary_features)  # i is the index of the primary product
 
-        if fixed_alpha == 0 and binary_features == 0:
+        else:
             alpha = HomogeneousUsers.alpha
             num_users = int(np.random.normal(number_users, scale=0.2 * number_users,
                                              size=1))  # drawn from a gaussian

@@ -1,5 +1,5 @@
 import numpy as np
-from Environment.E_commerce import *
+from Ola_project.Environment.E_commerce import *
 
 
 def reset_users_reserv_prices():
@@ -74,3 +74,19 @@ class Learner:
         for i in range(5):
             self.rewards_per_arm[i][int(pulled_arm[i])].append(reward[i])
         self.collected_rewards = np.append(self.collected_rewards, np.sum(reward))
+
+class LinearMabEnvironment(Environment):
+
+    # dim = dimension of the feature vector ( = 2)
+    def __init__(self, n_arms, E_commerce, margins_matrix, num_users, fixed_alpha, fixed_weights,
+                 fixed_units, dim):
+        super().__init__(n_arms, E_commerce, margins_matrix, num_users, fixed_alpha, fixed_weights,
+                 fixed_units)
+        self.theta = np.random.dirichlet(np.ones(dim), size = 1) # set the values of the parameters such that they sum to 1
+        self.arms_features = np.random.binomial(1, 0.5, size=(n_arms,dim))
+        self.p = np.zeros(n_arms)
+        for i in range(0, n_arms):
+            self.p[i] = np.dot(self.theta, self.arms_features[i])
+
+
+

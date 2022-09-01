@@ -1,6 +1,6 @@
 import numpy as np
-from Environment.Daily_Customers import *
-from Environment.Product import *
+from Daily_Customers import *
+from Product import *
 
 
 class E_commerce:
