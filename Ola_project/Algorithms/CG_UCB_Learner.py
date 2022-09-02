@@ -1,5 +1,6 @@
 from UCB_Learner import *
 
+# for context generation
 class CG_UCB(Learner):
     def __init__(self, n_arms, c=2):
         """UCB Learner algorithm.
@@ -17,6 +18,9 @@ class CG_UCB(Learner):
 
     def pull_arm(self):
 
+        idx = [[np.zeros(5) for _ in range(2)] for _ in range(2)]
+        upper_conf_per_type = [[np.zeros((5, 4)) for _ in range(2)] for _ in range(2)]
+
         # split_1 == 0 and split_2 == 0 --> don't split (one class)
         # split_1 == 1 and split_2 == 0 --> split into User0 and User1+User2 (2 classes)
         # split_1 == 0 and split_2 == 1 --> split into User0+User1 and User2 (2 classes)
@@ -32,9 +36,6 @@ class CG_UCB(Learner):
                 if self.t == 2 * self.n_arms:  # 2*4=8
                     for i in range(5):
                         self.make_comparable_per_type[split_1][split_2][i] = np.std(self.expected_rewards_per_type[split_1][split_2][i])  # sd. var. of first collected rewards
-
-                idx = [[np.zeros(5) for _ in range(2)] for _ in range(2)]
-                upper_conf_per_type = [[np.zeros((5, 4)) for _ in range(2)] for _ in range(2)]
 
                 # chose the arm with the highest expected_rewards for each product,
                 # taking into account the confidence interval (which gets smaller more time the corresponding arm is pulled)
