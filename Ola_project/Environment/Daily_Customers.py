@@ -1,5 +1,5 @@
 import numpy as np
-from User import *
+from  Environment.User import *
 
 
 # Each day we have a list of users who enter the website, distributed with respect to their classes
@@ -76,8 +76,8 @@ class Daily_Customers:
                     # <--- QUI NON STIAMO CONSIDERANDO QUELLI CHE VANNO DAI CONCORRENTI
 
                 for i in range(len(users_per_product)):  # for each product
-                    # for j in range(int(users_per_product[i])):  # for each user
-                    self.whichUser(type_user, i, fixed_weights,
+                    for _ in range(int(users_per_product[i])):  # for each user
+                        self.whichUser(type_user, i, fixed_weights,
                                    binary_features)  # i is the index of the primary product
 
         else:

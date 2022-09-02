@@ -1,5 +1,5 @@
 import numpy as np
-from Ola_project.Environment.E_commerce import *
+from Environment.E_commerce import *
 
 
 def reset_users_reserv_prices():
@@ -22,7 +22,7 @@ class Environment:
         self.fixed_weights = fixed_weights
         self.daily_units = np.zeros(5)
         self.fixed_units = fixed_units
-        reset_users_reserv_prices()
+        reset_users_reserv_prices()  # for abrout change
 
     def round(self, pulled_arm):
         """For each product, it changes the price corresponding to the pulled arm

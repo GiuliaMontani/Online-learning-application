@@ -45,6 +45,8 @@ class User0(User):
 
     def __init__(self, primary, fixed_weights):
         User.__init__(self, primary)
+        self.f1 = 0
+        self.f2 = 0
         self.reservation_price = self.avg_reservation_price + np.random.normal(1, scale=2,
                                                                          size=5)  # average reservation price
         # uncertain weight of the graph
@@ -64,7 +66,7 @@ class User0(User):
 # curious buyer, more variable budget, higher probability to click on other products
 class User1(User):
     alpha = [0.2, 0.2, 0.2, 0.2, 0.2]
-    avg_reservation_price = [10, 20, 30, 40, 50]
+    avg_reservation_price = np.array([10, 20, 30, 40, 50])
 
     @staticmethod
     def reset_avg_reservation_price():
@@ -72,6 +74,8 @@ class User1(User):
 
     def __init__(self, primary, fixed_weights):
         User.__init__(self, primary)
+        self.f1 = 1
+        self.f2 = 0
         self.reservation_price = self.avg_reservation_price + np.random.normal(1, scale=4,
                                                                          size=5)  # more variable reservation price
         if fixed_weights != 1:
@@ -88,7 +92,7 @@ class User1(User):
 # buyer with higher budget 
 class User2(User):
     alpha = [0.2, 0.2, 0.2, 0.2, 0.2]
-    avg_reservation_price = [15, 25, 35, 45, 55]
+    avg_reservation_price =  np.array( [15, 25, 35, 45, 55])
 
     @staticmethod
     def reset_avg_reservation_price():
@@ -96,6 +100,8 @@ class User2(User):
 
     def __init__(self, primary, fixed_weights):
         User.__init__(self, primary)
+        self.f1 = 1
+        self.f2 = 1
         self.reservation_price = self.avg_reservation_price + np.random.normal(1, scale=3, size=5)  # higher reservation price
         if fixed_weights != 1:
             self.P = User.generate_graph(self,

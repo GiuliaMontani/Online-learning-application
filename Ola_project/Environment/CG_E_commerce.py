@@ -3,7 +3,7 @@ from Environment.Daily_Customers import *
 from Environment.Product import *
 
 
-class E_commerce:
+class CG_E_commerce:
     # constructor
     def __init__(self, binary_features=1):
         """ E-commerce class.
@@ -25,14 +25,14 @@ class E_commerce:
              [0., self.lambda_, 1., 0., 0.],
              [1., 0., 0., self.lambda_, 0.]])
         # list of the total daily rewards for each day
-        self.daily_rewards = []
+        self.daily_rewards = [[[] for _ in range(2)] for _ in range(2)]
         # clicks per product for the current day
-        self.daily_clicks = []
+        self.daily_clicks = [[[] for _ in range(2)] for _ in range(2)]
         # purchases per product for the current day
-        self.daily_purchases = []
-        self.daily_rewards_per_product = []
+        self.daily_purchases = [[[] for _ in range(2)] for _ in range(2)]
+        self.daily_rewards_per_product = [[[] for _ in range(2)] for _ in range(2)]
         # daily purchased units per product
-        self.daily_purchased_units = []
+        self.daily_purchased_units = [[[] for _ in range(2)] for _ in range(2)]
         # binary_features: 1 if we do not distinguish between users
         self.binary_features = binary_features
 
@@ -49,21 +49,6 @@ class E_commerce:
         self.time_history.clear()
         self.daily_rewards.clear()
         self.daily_users.clear()
-
-        # USED AT THE BEGINNING BUT NOW IS USELESS
-
-    # graph with the probabilities to see the products
-    # 1 for the first secondary slot, lambda for the second one
-    # def generate_graph(self, distribution):
-    #     graph = np.zeros((5,5))
-    #     for i in range(5):
-    #       # secondary slots indexes (0,1,2,3,4,5)-{i=primary}
-    #       j = np.random.choice([x for x in range(5) if x != i ],2, replace = False) 
-    #       # probability to see the first slot = 1
-    #       graph[i,j[0]] = distribution[i]
-    #       # 1 * lambda 
-    #       graph[i,j[1]] = distribution[i] * self.lambda_
-    #     return graph
 
     # simulate a day of visits in the website
     def simulate_day(self, number_users, fixed_alpha, fixed_weights, fixed_units):
@@ -86,31 +71,35 @@ class E_commerce:
         D.UsersGenerator(number_users, fixed_alpha, fixed_weights, self.binary_features)
         self.daily_users.append(D.Users)
 
-        rewards_of_the_day = 0
+        rewards_of_the_day = [[0 for _ in range(2)] for _ in range(2)]
         # store the visits of the day
         Day = []
-        self.daily_rewards_per_product = np.zeros(5)
-        self.daily_purchased_units = np.zeros(5)
-        self.daily_purchases = np.zeros(5)
-        self.daily_clicks = np.zeros(5)
+        self.daily_rewards_per_product = [[np.zeros(5) for _ in range(2)] for _ in range(2)]
+        self.daily_purchased_units = [[np.zeros(5) for _ in range(2)] for _ in range(2)]
+        self.daily_purchases = [[np.zeros(5) for _ in range(2)] for _ in range(2)]
+        self.daily_clicks = [[np.zeros(5) for _ in range(2)] for _ in range(2)]
 
         # for each user visit (each day we can change the prices: we have to implement it)
         for i in range(np.size(D.Users)):
             visit = self.visit(D.Users[i], fixed_units)
             Day.append(visit)
+            f1 = D.Users[i].f1
+            f2 = D.Users[i].f2
             # compute and update all the variables that we will use in the algorithms
             for k in range(np.size(D.Users[i].cart)):
-                rewards_of_the_day += self.products[
+                rewards_of_the_day[f1][f2] += self.products[
                     D.Users[i].cart[k]].margin  # * self.products[D.Users[i].cart[k]].margin #if we have units!=1
-                self.daily_purchases[D.Users[i].cart[k]] += 1
-                self.daily_purchased_units[D.Users[i].cart[k]] += D.Users[i].quantities[k]
-                self.daily_rewards_per_product[D.Users[i].cart[k]] += D.Users[i].quantities[k] * self.products[
+                self.daily_purchases[f1][f2][D.Users[i].cart[k]] += 1
+                self.daily_purchased_units[f1][f2][D.Users[i].cart[k]] += D.Users[i].quantities[k]
+                self.daily_rewards_per_product[f1][f2][D.Users[i].cart[k]] += D.Users[i].quantities[k] * self.products[
                     D.Users[i].cart[k]].margin
             for z in range(np.size(D.Users[i].products_clicked)):
-                self.daily_clicks[D.Users[i].products_clicked[z]] += 1
+                self.daily_clicks[f1][f2][D.Users[i].products_clicked[z]] += 1
 
         self.time_history.append(Day)
-        self.daily_rewards.append(rewards_of_the_day)
+        for f1 in range(2):
+            for f2 in range(2):
+                self.daily_rewards[f1][f2].append(rewards_of_the_day[f1][f2])
         D.Users[:] = []
         return Day
 
