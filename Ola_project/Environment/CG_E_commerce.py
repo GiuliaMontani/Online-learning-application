@@ -10,7 +10,7 @@ class CG_E_commerce:
         :param binary_features: 1 if we distinguish between users
         """
         # list of products
-        self.products = []
+        self.products = [[[] for _ in range(2)] for _ in range(2)]
         # list of lists of users
         self.daily_users = []
         # dataset with the history of products visited by each user in each day
@@ -39,11 +39,11 @@ class CG_E_commerce:
     def set_lambda(self, new_lambda):
         self.lambda_ = new_lambda
 
-    def add_product(self, product):
-        self.products.append(product)
+    def add_product(self, f1, f2, product):
+        self.products[f1][f2].append(product)
 
-    def set_products(self, product_list):
-        self.products = product_list
+    def set_products(self, f1, f2, product_matrix):
+        self.products[f1][f2] = product_matrix
 
     def clear_history(self):
         self.time_history.clear()
@@ -87,11 +87,11 @@ class CG_E_commerce:
             f2 = D.Users[i].f2
             # compute and update all the variables that we will use in the algorithms
             for k in range(np.size(D.Users[i].cart)):
-                rewards_of_the_day[f1][f2] += self.products[
+                rewards_of_the_day[f1][f2] += self.products[f1][f2][
                     D.Users[i].cart[k]].margin  # * self.products[D.Users[i].cart[k]].margin #if we have units!=1
                 self.daily_purchases[f1][f2][D.Users[i].cart[k]] += 1
                 self.daily_purchased_units[f1][f2][D.Users[i].cart[k]] += D.Users[i].quantities[k]
-                self.daily_rewards_per_product[f1][f2][D.Users[i].cart[k]] += D.Users[i].quantities[k] * self.products[
+                self.daily_rewards_per_product[f1][f2][D.Users[i].cart[k]] += D.Users[i].quantities[k] * self.products[f1][f2][
                     D.Users[i].cart[k]].margin
             for z in range(np.size(D.Users[i].products_clicked)):
                 self.daily_clicks[f1][f2][D.Users[i].products_clicked[z]] += 1
@@ -117,8 +117,11 @@ class CG_E_commerce:
         prob_matrix = user.P * self.graph
         n_nodes = prob_matrix.shape[0]
 
+        f1 = user.f1
+        f2 = user.f2
+
         # if user's reservation price is lower than the price of the primary product -> end the visit
-        if user.reservation_price[user.primary] < self.products[user.primary].price:  # not bought
+        if user.reservation_price[user.primary] < self.products[f1][f2][user.primary].price:  # not bought
             user.products_clicked = [user.primary]
             history_purchase = []
             user.cart = []
@@ -145,9 +148,9 @@ class CG_E_commerce:
         history_nodes = np.array([active_nodes])
 
         # store the prices of the 5 products in an array
-        prod_prices = np.zeros(len(self.products))
-        for i in range(len(self.products)):
-            prod_prices[i] = self.products[i].price
+        prod_prices = np.zeros(len(self.products[f1][f2]))
+        for i in range(len(self.products[f1][f2])):
+            prod_prices[i] = self.products[f1][f2][i].price
 
         # user can't click again on products already bought
         prob_matrix[:, user.primary] = 0.
