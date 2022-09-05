@@ -35,7 +35,8 @@ class CG_E_commerce:
         self.daily_purchased_units = [[[] for _ in range(2)] for _ in range(2)]
         # binary_features: 1 if we do not distinguish between users
         self.binary_features = binary_features
-
+        # visiting users for class
+        self.users_by_class = [[0 for _ in range(2)] for _ in range(2)]
     def set_lambda(self, new_lambda):
         self.lambda_ = new_lambda
 
@@ -112,13 +113,14 @@ class CG_E_commerce:
         :type fixed_units: bool
         :return:
         """
-
         # Influence probability matrix of the products, for each user equal to the see probability * click probability
         prob_matrix = user.P * self.graph
         n_nodes = prob_matrix.shape[0]
 
         f1 = user.f1
         f2 = user.f2
+
+        self.users_by_class[f1][f2] = self.users_by_class[f1][f2] + 1
 
         # if user's reservation price is lower than the price of the primary product -> end the visit
         if user.reservation_price[user.primary] < self.products[f1][f2][user.primary].price:  # not bought
