@@ -5,7 +5,7 @@ from  Environment.User import *
 # Each day we have a list of users who enter the website, distributed with respect to their classes
 class Daily_Customers:
     # constructor
-    def __init__(self, percentage=[0.3, 0.4, 0.3]):
+    def __init__(self, percentage=[ 0.3, 0.4, 0.3 ]):
         self.Users = []
         self.users_distribution = percentage
 
@@ -54,15 +54,14 @@ class Daily_Customers:
 
         if binary_features == 1:
             for type_user in range(3):
+                num_users = int(np.random.normal(number_users * self.users_distribution[type_user],
+                                                 scale=0.2 * number_users * self.users_distribution[type_user],
+                                                 size=1))  # drawn from a gaussian
 
                 if fixed_alpha == 1:
-                    num_users = int(
-                        np.random.normal(number_users*self.users_distribution[type_user], scale=0.2 * number_users*self.users_distribution[type_user], size=1))  # drawn from a gaussian
                     users_per_product = np.ones(5) * round(num_users / 5)
                     # users_per_product = np.random.multinomial(num_users, alpha)
                 else:  # fixed_alpha == 0
-                    num_users = int(np.random.normal(number_users*self.users_distribution[type_user], scale=0.2 * number_users*self.users_distribution[type_user], size=1))  # drawn from a gaussian
-
                     if type_user == 0:
                         alpha = User0.alpha
                     elif type_user == 1:
