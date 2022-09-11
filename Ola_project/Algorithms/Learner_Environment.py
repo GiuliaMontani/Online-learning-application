@@ -66,7 +66,7 @@ class Learner:
     def __init__(self, n_arms):
         self.n_arms = n_arms
         self.t = 0
-        self.rewards_per_arm = [[[0] for i in range(n_arms)] for j in range(5)]
+        self.rewards_per_arm = [[[0] for i in range(n_arms)] for j in range(5)]  #perchè 0?
         self.collected_rewards = np.array([])
         self.counter_per_arm = np.array([np.zeros(4)] * 5)
 

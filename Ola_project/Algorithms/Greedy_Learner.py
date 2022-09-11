@@ -7,7 +7,7 @@ class Greedy(Learner):
         otherwise the socket with the highest current estimated reward will be selected.
 
         :param n_arms: number of prices to test
-        :param epsilon: average probability of random action
+        :param epsilon: average probability of random action (if eps=1, a.s. random choice)
         """
         super().__init__(n_arms)
         self.expected_rewards = np.zeros([5, n_arms])

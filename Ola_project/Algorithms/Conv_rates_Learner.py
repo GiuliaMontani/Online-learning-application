@@ -13,6 +13,7 @@ class Conv_rates(Learner):
         self.beta_parameters = np.array([np.ones((n_arms, 2))] * 5)
         self.expected_rewards = np.zeros([5, n_arms])
         self.lambda_poisson = np.array([np.zeros(4)] * 5)
+        self.rewards_per_arm = [[[] for i in range(n_arms)] for j in range(5)]  #correzione rispetto 0
 
     def pull_arm(self, best_arm_per_product=[], clairvoyant_flag=0):
         if clairvoyant_flag == 1:
