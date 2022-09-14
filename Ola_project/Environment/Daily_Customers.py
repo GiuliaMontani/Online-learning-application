@@ -14,7 +14,7 @@ class Daily_Customers:
 
         :param type_user: type of user (0,1 or 2)
         :param primary: primary product which is shown
-        :param fixed_weights: 1 if alpha is fixed
+        :param fixed_weights: 1 if the graph of influence probabilities is the same in all classes
         :param binary_features: 1 if we do not distinguish between users (STEP 1)
 
         """
@@ -40,7 +40,7 @@ class Daily_Customers:
         :type number_users: int
         :param fixed_alpha: 1 if alpha is fixed (uniformly distributed over the products)
         :type fixed_alpha: bool
-        :param fixed_weights: 1 if alpha is fixed
+        :param fixed_weights: 1 if the graph of influence probabilities is the same in all classes
         :type fixed_weights: bool
         :param binary_features: 1 if we distinguish between user's types, 0 if not
         :type binary_features: bool

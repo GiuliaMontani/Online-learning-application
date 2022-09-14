@@ -73,7 +73,7 @@ class E_commerce:
         :type number_users: int
         :param fixed_alpha: 1 if alpha is fixed (uniformly distributed over the products)
         :type fixed_alpha: bool
-        :param fixed_weights: 1 if alpha is fixed
+        :param fixed_weights: 1 if the graph of influence probabilities is the same in all classes
         :type fixed_weights: bool
         :param fixed_units: if 1 always the same number of units is bought for each product
         :type fixed_units: bool
