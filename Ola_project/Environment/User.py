@@ -34,21 +34,21 @@ class User:
     # Inheritance
 # 3 classes of users:
 
-# targeted buyer, lower probability to click other products after the first
+# non-Italian buyers (they are not members)
 class User0(User):
     alpha = [0.2, 0.2, 0.2, 0.2, 0.2]
-    avg_reservation_price = np.array([10, 20, 30, 40, 50])
+    avg_reservation_price = np.array([25, 37, 34, 48, 104])
 
     @staticmethod
     def reset_avg_reservation_price():
-        User0.avg_reservation_price = np.array([10, 20, 30, 40, 50])
+        User0.avg_reservation_price = np.array([25, 37, 34, 48, 104])
 
     def __init__(self, primary, fixed_weights):
         User.__init__(self, primary)
         self.f1 = 0
         self.f2 = 0
-        self.reservation_price = self.avg_reservation_price + np.random.normal(1, scale=2,
-                                                                         size=5)  # average reservation price
+        self.reservation_price = self.avg_reservation_price + np.random.normal(1, scale=4,
+                                                                         size=5)
         # uncertain weight of the graph
         if fixed_weights != 1:
             self.P = User.generate_graph(self, np.random.uniform(0, 0.5, size=(5, 5)))  # lower influence probabilities
@@ -63,20 +63,20 @@ class User0(User):
 
 
 
-# curious buyer, more variable budget, higher probability to click on other products
+# Italian customers who did not subscribe for membership
 class User1(User):
     alpha = [0.2, 0.2, 0.2, 0.2, 0.2]
-    avg_reservation_price = np.array([10, 20, 30, 40, 50])
+    avg_reservation_price = np.array([23, 34, 30, 46, 95])
 
     @staticmethod
     def reset_avg_reservation_price():
-        User1.avg_reservation_price = [10, 20, 30, 40, 50]
+        User1.avg_reservation_price = [23, 34, 30, 46, 95]
 
     def __init__(self, primary, fixed_weights):
         User.__init__(self, primary)
         self.f1 = 1
         self.f2 = 0
-        self.reservation_price = self.avg_reservation_price + np.random.normal(1, scale=4,
+        self.reservation_price = self.avg_reservation_price + np.random.normal(1, scale=3,
                                                                          size=5)  # more variable reservation price
         if fixed_weights != 1:
             self.P = User.generate_graph(self, np.random.uniform(0.2, 1, size=(5, 5)))  # higher influence probabilities
@@ -89,20 +89,20 @@ class User1(User):
                                                    [0.04359364, 0.45397953, 0.31312689, 0.41816953, 0.24363287]]))
 
 
-# buyer with higher budget 
+# Italian customers who did subscribe for membership
 class User2(User):
     alpha = [0.2, 0.2, 0.2, 0.2, 0.2]
-    avg_reservation_price =  np.array( [15, 25, 35, 45, 55])
+    avg_reservation_price =  np.array( [22, 32.60, 29, 44, 90])
 
     @staticmethod
     def reset_avg_reservation_price():
-        User2.avg_reservation_price = [15, 25, 35, 45, 55]
+        User2.avg_reservation_price = [22, 32.60, 29, 44, 90]
 
     def __init__(self, primary, fixed_weights):
         User.__init__(self, primary)
         self.f1 = 1
         self.f2 = 1
-        self.reservation_price = self.avg_reservation_price + np.random.normal(1, scale=3, size=5)  # higher reservation price
+        self.reservation_price = self.avg_reservation_price + np.random.normal(1, scale=2, size=5)
         if fixed_weights != 1:
             self.P = User.generate_graph(self,
                                          np.random.uniform(0, 1, size=(5, 5)))  # more variable influence probabilities
@@ -118,10 +118,10 @@ class User2(User):
 # homogenous user class (used in the first steps)
 class HomogeneousUsers(User):
     alpha = [0.2, 0.2, 0.2, 0.2, 0.2]
-
+    avg_reservation_price = np.multiply([0.3, 0.3, 0.3, 0.3, 0.3], [25, 35, 35, 45, 90]) + np.multiply([0.3, 0.3, 0.3, 0.3, 0.3],[20, 30, 26, 39, 80]) + np.multiply([0.3, 0.3, 0.3, 0.3, 0.3],[18, 27, 23, 35, 70])
     def __init__(self, primary, fixed_weights):
         User.__init__(self, primary)
-        self.reservation_price = [10, 23, 35, 41, 54] + np.random.normal(0, scale=2, size=5)  # small variance
+        self.reservation_price = self.avg_reservation_price + np.random.normal(0, scale=2, size=5)
         if fixed_weights != 1:
             self.P = User.generate_graph(self, np.random.uniform(0.2, 1, size=(5, 5)))
         else:
@@ -131,3 +131,4 @@ class HomogeneousUsers(User):
                                                    [0.25435096, 0.32939066, 0.25589946, 0.18488915, 0.36627083],
                                                    [0.27801728, 0.47490127, 0.33253022, 0.48659868, 0.42396207],
                                                    [0.04359364, 0.45397953, 0.31312689, 0.41816953, 0.24363287]]))
+
