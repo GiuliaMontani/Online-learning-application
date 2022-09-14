@@ -74,6 +74,13 @@ class Learner:
         for i in range(5):
             self.rewards_per_arm[i][int(pulled_arm[i])].append(reward[i])
         self.collected_rewards = np.append(self.collected_rewards, np.sum(reward))
+        
+    def reset(self):
+        self.rewards_per_arm = [[[] for i in range(self.n_arms)] for j in range(5)]  #perchè 0?
+        self.collected_rewards = np.array([])
+        self.counter_per_arm = np.array([np.zeros(4)] * 5)
+
+
 
 class LinearMabEnvironment(Environment):
 
