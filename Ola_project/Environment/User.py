@@ -37,11 +37,11 @@ class User:
 # non-Italian buyers (they are not members)
 class User0(User):
     alpha = [0.1, 0.3, 0.1, 0.2, 0.3]
-    avg_reservation_price = np.array([25, 37, 34, 48, 104])
+    avg_reservation_price = np.array([23, 34, 31, 46, 103])
     scale = np.array([1.5, 2, 1.7, 2.5, 4])
     @staticmethod
     def reset_avg_reservation_price():
-        User0.avg_reservation_price = np.array([25, 37, 34, 48, 104])
+        User0.avg_reservation_price = np.array([23, 34, 31, 46, 104])
         User0.scale = np.array([1.5, 2, 1.7, 2.5, 4])
 
     def __init__(self, primary, fixed_weights):
@@ -67,12 +67,12 @@ class User0(User):
 # Italian customers who did not subscribe for membership
 class User1(User):
     alpha = [0.2, 0.2, 0.2, 0.2, 0.2]
-    avg_reservation_price = np.array([23, 34, 30, 46, 95])
-    scale = np.array([1.7, 2, 1.7, 2.5, 4])
+    avg_reservation_price = np.array([21, 32, 29, 44, 95])
+    scale = np.array([1.5, 2, 1.7, 2.5, 4])
     @staticmethod
     def reset_avg_reservation_price():
-        User1.avg_reservation_price = [23, 34, 30, 46, 95]
-        User1.scale = np.array([1.7, 2, 1.7, 2.5, 4])
+        User1.avg_reservation_price = np.array([21, 32, 29, 44, 95])
+        User1.scale = np.array([1.5, 2, 1.7, 2.5, 4])
     def __init__(self, primary, fixed_weights):
         User.__init__(self, primary)
         self.f1 = 1
