@@ -37,7 +37,7 @@ class User:
 # non-Italian buyers (they are not members)
 class User0(User):
     alpha = [0.1, 0.3, 0.1, 0.2, 0.3]
-    avg_reservation_price = np.array([23, 34, 31, 46, 103])
+    avg_reservation_price = np.array([23, 34, 31, 46, 104])
     scale = np.array([1.5, 2, 1.7, 2.5, 4])
     @staticmethod
     def reset_avg_reservation_price():
