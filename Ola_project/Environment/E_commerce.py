@@ -1,7 +1,7 @@
 import numpy as np
 from Environment.Daily_Customers import *
 from Environment.Product import *
-
+import copy
 
 class E_commerce:
     # constructor
@@ -81,10 +81,14 @@ class E_commerce:
         :return: a Daily_Customers class
 
         """
-
+        print("#######################    NEW DAY")
         D = Daily_Customers()
         D.UsersGenerator(number_users, fixed_alpha, fixed_weights, self.binary_features)
-        self.daily_users.append(D.Users)
+        print("USERS:",D.Users)
+        print("USERS len:", len(D.Users))
+        self.daily_users.append(copy.deepcopy(D.Users))
+        print("DAILY--------------------",self.daily_users)
+        print("--------------------DAILY n:", len(self.daily_users))
 
         rewards_of_the_day = 0
         # store the visits of the day
