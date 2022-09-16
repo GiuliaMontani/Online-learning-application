@@ -29,15 +29,16 @@ def Greedy_algorithm(Conv_matrix, Margins_matrix):
         #if in the previous iteration the maximum was updated it means that the kth product
         #has increased its price by one (since we got a better configuration for the reward)
         #So we don't reset the matrix for it but we set a new price increased by one:
+        print("Iterazione ", num_it)
         if flag!=0 and i+1<4:
             Conv_matrix[k,i] = Conv_matrix[k,i+1]
             Margins_matrix[k,i] = Margins_matrix[k,i+1]
             flag = 0
             best_config.append(k)
             max_collected.append(max)
-            print(max)
+            #print(max)
         
-        print("Iterazione ", num_it)
+
         #for each product
         for j in range(0,5):
 
@@ -60,7 +61,10 @@ def Greedy_algorithm(Conv_matrix, Margins_matrix):
                 max = reward
                 k = j #save the product that in this iteration has increased the margin
                 flag = 1 #since we foud a new maximum
-
+        print(max)
+    
+    best_config.append(k)
+    max_collected.append(max)
     print("__________________")
     print("max expected reward found: ", max)
     print("__________________")

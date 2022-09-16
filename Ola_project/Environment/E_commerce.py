@@ -5,7 +5,7 @@ import copy
 
 class E_commerce:
     # constructor
-    def __init__(self, binary_features=1):
+    def __init__(self, binary_features=0):
         """ E-commerce class.
         :param binary_features: 1 if we distinguish between users
         """
