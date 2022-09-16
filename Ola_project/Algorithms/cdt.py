@@ -149,6 +149,7 @@ class CUSUM2:
 
         if self.n_rewards == self.M:
             self.mean_over_M /= self.M
+            print("the mean over M steps is:", self.mean_over_M)
 
         if self.n_rewards <= self.M:
             self.change_estimate = self.n_rewards + 1
@@ -161,7 +162,7 @@ class CUSUM2:
 
             print('mean_over_M: ', self.mean_over_M)
             for i in range(n_buy):
-                s_increase = (1 - self.mean_over_M) - self.epsilon
+                s_increase = (1 - self.mean_over_M) - self.epsilon  # (1 - average value we should obtain) - variation
                 s_decrease = -(1 - self.mean_over_M) - self.epsilon
                 self.g_increase = max(0, self.g_increase + s_increase)
                 self.g_decrease = max(0, self.g_decrease + s_decrease)

@@ -96,7 +96,7 @@ class E_commerce:
         # for each user visit (each day we can change the prices: we have to implement it)
         for i in range(np.size(D.Users)):
             visit = self.visit(D.Users[i], fixed_units)
-            Day.append(visit)
+            Day.append(copy.deepcopy(visit))
             # compute and update all the variables that we will use in the algorithms
             for k in range(np.size(D.Users[i].cart)):
                 rewards_of_the_day += self.products[

@@ -42,21 +42,3 @@ class CG_Environment:
                     if self.clicks_current_day[f1][f2][i] != 0:
                         reward[f1][f2][i] = self.E.daily_rewards_per_product[f1][f2][i] / self.clicks_current_day[f1][f2][i]
         return reward
-
-
-class CG_Learner:
-    def __init__(self, n_arms):
-        self.n_arms = n_arms
-        self.t = 0
-        self.rewards_per_arm = [[[[[0] for i in range(n_arms)] for j in range(5)] for _ in range(2)] for _ in range(2)]
-        self.collected_rewards = [[np.array([]) for _ in range(2)] for _ in range(2)]
-        self.counter_per_arm = np.array([np.zeros(4)] * 5)
-
-    def update_observations(self, pulled_arm, reward):
-        for f1 in range(2):
-            for f2 in range(2):
-                for i in range(5):
-                    self.rewards_per_arm[f1][f2][i][int(pulled_arm[i])].append(reward[i])
-        for f1 in range(2):
-            for f2 in range(2):
-                self.collected_rewards = np.append(self.collected_rewards, np.sum(reward))

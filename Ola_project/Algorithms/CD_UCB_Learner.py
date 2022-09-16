@@ -50,7 +50,6 @@ class CD1_UCB(UCB):
 class CUSUM_UCB(UCB):
     def __init__(self, n_arms, c=2, M=5, eps=0.05, h=10):
         """ (CUSUM) Change-Detection based UCB. Look at change_detection.pdf algorithm 3
-        I am not sure to have really understood well the paper
         :param n_arms: number of arms
         :param M: initialization of CUSUM
         :param eps: minimum expected mean variation

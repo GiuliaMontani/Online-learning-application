@@ -77,7 +77,7 @@ class User1(User):
         User.__init__(self, primary)
         self.f1 = 1
         self.f2 = 0
-        self.reservation_price = self.avg_reservation_price + np.random.normal(1, scale=1,
+        self.reservation_price = self.avg_reservation_price + np.random.normal(0, scale=1,
                                                                          size=5)*self.scale  # more variable reservation price
         if fixed_weights != 1:
             self.P = User.generate_graph(self, np.random.uniform(0.2, 1, size=(5, 5)))  # higher influence probabilities
