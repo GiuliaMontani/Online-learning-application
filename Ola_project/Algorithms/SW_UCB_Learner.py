@@ -26,8 +26,8 @@ class SW_UCB(UCB):
     def update(self, pulled_arm, reward):
         self.t += 1
         self.update_observations(pulled_arm, reward)
-        print('-----------time ', self.t)
-        print('pulled ',pulled_arm)
+        #print('-----------time ', self.t)
+        #print('pulled ',pulled_arm)
         for i in range(5):
             # for each product i
             self.pulled_arms[i] = np.append(self.pulled_arms[i], pulled_arm[i])

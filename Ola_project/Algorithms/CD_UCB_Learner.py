@@ -48,7 +48,7 @@ class CD1_UCB(UCB):
 
 
 class CUSUM_UCB(UCB):
-    def __init__(self, n_arms, c=2, M=5, eps=0.05, h=10):
+    def __init__(self, n_arms, c=2, M=5, eps=0.1, h=20):
         """ (CUSUM) Change-Detection based UCB. Look at change_detection.pdf algorithm 3
         :param n_arms: number of arms
         :param M: initialization of CUSUM
@@ -63,6 +63,8 @@ class CUSUM_UCB(UCB):
         self.detector = [[CUSUM2(M, eps, h) for _ in range(n_arms)] for _ in range(5)]
         # self.detections = [[] for _ in range(n_arms)]
         self.detections = [[[] for _ in range(n_arms)] for _ in range(5)]
+        self.down =[[[] for _ in range(n_arms)] for _ in range(5)]
+        self.up = [[[] for _ in range(n_arms)] for _ in range(5)]
 
     def update(self, pulled_arm, reward, purchases,clicks ):
         super().update(pulled_arm, reward)
@@ -73,18 +75,28 @@ class CUSUM_UCB(UCB):
             self.rewards_per_arm[i][int(pulled_arm[i])].append(reward[i])
             #print('estimated probability ', purchases[i] / clicks[i])
             print('running CUSUM algorithm on product',i,'arm',int(pulled_arm[i]))
+
             if self.detector[i][int(pulled_arm[i])].run(int(purchases[i]), int(clicks[i])):
-                print('------> detected change <-------')
-                self.reset_arm(i,int(pulled_arm[i]))
+                print('--------------------------------')
+                print('--------------------------------')
+                print('------> detected change <------- for the product', i)
+                print('--------------------------------')
+                print('--------------------------------')
+                self.reset_product(i)
                 self.detections[int(pulled_arm[i])].append(self.t)
 
+            # per analizzare andamento
+            for arm in range(4):
+                self.down[i][arm].append(self.detector[i][arm].g_decrease)
+                self.up[i][arm].append(self.detector[i][arm].g_increase)
 
-
-    def reset_arm(self, product, arm):
+    def reset_product(self, product):
         #print('resetting pr.',product, ', arm', arm)
         # self.means[arm] = 0
-        self.confidence[product][arm] = np.inf
+        for arm in range(4):
+            self.confidence[product][arm] = np.inf
+            self.detector[product][arm].reset()
         # self.tot_clicks[arm] = 0
         # self.tot_sales[arm] = 0
         self.expected_rewards[product] = 0
-        self.detector[product][arm].reset()
+

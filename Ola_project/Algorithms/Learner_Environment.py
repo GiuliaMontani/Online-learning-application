@@ -1,11 +1,14 @@
 import numpy as np
 from Environment.E_commerce import *
-
+import copy
 
 def reset_users_reserv_prices():
-    User0.reset_avg_reservation_price()
-    User1.reset_avg_reservation_price()
-    User2.reset_avg_reservation_price()
+    #User0.reset_avg_reservation_price()
+    #User1.reset_avg_reservation_price()
+    #User2.reset_avg_reservation_price()
+    User0.avg_reservation_price = np.array([23, 34, 31, 46, 104])
+    User1.avg_reservation_price = np.array([21, 32, 29, 44, 95])
+    User2.avg_reservation_price = np.array([21, 31, 28, 42, 87])
 
 
 class Environment:
@@ -13,7 +16,7 @@ class Environment:
     def __init__(self, n_arms, E_commerce, margins_matrix, num_users, fixed_alpha, fixed_weights,
                  fixed_units):
         self.n_arms = n_arms
-        self.E = E_commerce
+        self.E = copy.deepcopy(E_commerce)
         self.clicks_current_day = 0  # each day (round) they reset
         self.purchases_current_day = 0  # each day (round) they reset
         self.num_users = num_users
@@ -22,7 +25,7 @@ class Environment:
         self.fixed_weights = fixed_weights
         self.daily_units = np.zeros(5)
         self.fixed_units = fixed_units
-        reset_users_reserv_prices()  # for abrout change
+        reset_users_reserv_prices()  # for abrupt change
 
     def round(self, pulled_arm):
         """For each product, it changes the price corresponding to the pulled arm
@@ -49,16 +52,20 @@ class Environment:
         return reward
 
     def abrupt_change(self, changing_users, percentage):
+        """For each user class, it changes the reservation prices by a percentage
+                :param changing_users: which user changes
+                :type percentage: percentage of change
+        """
         print("Abrupt change")
         for user in changing_users:
             if user == 0:
-                User0.avg_reservation_price = percentage * User0.avg_reservation_price
+                User0.avg_reservation_price = np.multiply(percentage[0],User0.avg_reservation_price)
                 print('class User 0 has changed: its new average reservation price is', User0.avg_reservation_price)
             if user == 1:
-                User1.avg_reservation_price = percentage * User1.avg_reservation_price
+                User1.avg_reservation_price = np.multiply(percentage[1],User1.avg_reservation_price)
                 print('class User 1 has changed: its new average reservation price is', User1.avg_reservation_price)
             if user == 2:
-                User2.avg_reservation_price = percentage * User2.avg_reservation_price
+                User2.avg_reservation_price = np.multiply(percentage[2],User2.avg_reservation_price)
                 print('class User 2 has changed: its new average reservation price is', User2.avg_reservation_price)
 
 
