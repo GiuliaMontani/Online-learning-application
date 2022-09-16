@@ -18,7 +18,6 @@ class Daily_Customers:
         :param binary_features: 1 if we do not distinguish between users (STEP 1)
 
         """
-
         if binary_features == 1:
 
             if type_user == 0:
@@ -28,13 +27,13 @@ class Daily_Customers:
             elif type_user == 2:
                 self.Users.append(User2(primary, fixed_weights))
 
-        if binary_features == 10:
+        elif binary_features == 10:
              self.Users.append(User0(primary, fixed_weights))
 
-        if binary_features == 20:
+        elif binary_features == 20:
              self.Users.append(User1(primary, fixed_weights))
 
-        if binary_features == 30:
+        elif binary_features == 30:
              self.Users.append(User2(primary, fixed_weights))
         # if the weights are fixed -> users have the same graph with the click probabilities
         else:
