@@ -1,12 +1,14 @@
 import numpy as np
 from Environment.CG_E_commerce import *
+import copy
+
 
 class CG_Environment:
 
     def __init__(self, n_arms, E_commerce, margins_matrix, num_users, fixed_alpha, fixed_weights,
                  fixed_units):
         self.n_arms = n_arms
-        self.E = E_commerce
+        self.E = copy.deepcopy(E_commerce)
         self.clicks_current_day = [[0 for _ in range(2)] for _ in range(2)] # each day (round) they reset
         self.purchases_current_day = [[0 for _ in range(2)] for _ in range(2)]  # each day (round) they reset
         self.num_users = num_users
