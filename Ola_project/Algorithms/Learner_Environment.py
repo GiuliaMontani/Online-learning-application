@@ -56,7 +56,11 @@ class Environment:
                 :param changing_users: which user changes
                 :type percentage: percentage of change
         """
+        print('--------------------------------')
+        print('--------------------------------')
         print("Abrupt change")
+        print('--------------------------------')
+        print('--------------------------------')
         for user in changing_users:
             if user == 0:
                 User0.avg_reservation_price = np.multiply(percentage[0],User0.avg_reservation_price)

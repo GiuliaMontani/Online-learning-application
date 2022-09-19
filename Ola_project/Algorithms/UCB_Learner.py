@@ -50,7 +50,7 @@ class UCB(Learner):
             self.expected_rewards[i][int(pulled_arm[i])] = (self.expected_rewards[i][int(pulled_arm[i])] * (
                     self.counter_per_arm[i][int(pulled_arm[i])] - 1) + reward[i]) / self.counter_per_arm[i][
                                                                int(pulled_arm[i])]
-            n_samples = np.size(self.rewards_per_arm[i][int(pulled_arm[i])])
+            n_samples = self.counter_per_arm[i][int(pulled_arm[i])]-1 #np.size(self.rewards_per_arm[i][int(pulled_arm[i])])
             self.confidence[i][int(pulled_arm[i])] = (self.c * np.log(
                 self.t) / n_samples) ** 0.5 if n_samples > 0 else np.inf
 

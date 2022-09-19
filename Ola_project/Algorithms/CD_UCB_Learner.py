@@ -59,22 +59,29 @@ class CUSUM_UCB(UCB):
 
         super().__init__(n_arms, c)
         self.M = M
-        # self.detector = [CUSUM(M, eps, h) for _ in range(n_arms)]
-        self.detector = [[CUSUM2(M, eps, h) for _ in range(n_arms)] for _ in range(5)]
+        #self.detector = [[CUSUM2(M, eps, h) for _ in range(n_arms)] for _ in range(5)]
+        self.detector = [[CUSUM2(M, eps, h), CUSUM2(M, eps, h), CUSUM2(M, eps, h), CUSUM2(M, eps, h)],
+                         [CUSUM2(M, eps, h), CUSUM2(M, eps, h), CUSUM2(M, eps, h), CUSUM2(M, eps, h)],
+                         [CUSUM2(M, eps, h), CUSUM2(M, eps, h), CUSUM2(M, eps, h), CUSUM2(M, eps, h)],
+                         [CUSUM2(M, eps, h), CUSUM2(M, eps, h), CUSUM2(M, eps, h), CUSUM2(M, eps, h)],
+                         [CUSUM2(M, eps, h), CUSUM2(M, eps, h), CUSUM2(M, eps, h), CUSUM2(M, eps, h)]
+                         ]
         # self.detections = [[] for _ in range(n_arms)]
         self.detections = [[[] for _ in range(n_arms)] for _ in range(5)]
         self.down =[[[] for _ in range(n_arms)] for _ in range(5)]
         self.up = [[[] for _ in range(n_arms)] for _ in range(5)]
+        self.time = 0
 
-    def update(self, pulled_arm, reward, purchases,clicks ):
+    def update(self, pulled_arm, reward, purchases, clicks):
         super().update(pulled_arm, reward)
+        self.time += 1
         # update the mean of the arm we pulled
         # self.means[pulled_arm] = self.tot_sales[arm_pulled] / self.tot_clicks[pulled_arm]
         print('pulled arm:', pulled_arm)
         for i in range(5):
-            self.rewards_per_arm[i][int(pulled_arm[i])].append(reward[i])
+            #self.rewards_per_arm[i][int(pulled_arm[i])].append(reward[i])
             #print('estimated probability ', purchases[i] / clicks[i])
-            print('running CUSUM algorithm on product',i,'arm',int(pulled_arm[i]))
+            #print('running CUSUM algorithm on product', i, 'arm', int(pulled_arm[i]))
 
             if self.detector[i][int(pulled_arm[i])].run(int(purchases[i]), int(clicks[i])):
                 print('--------------------------------')
@@ -82,8 +89,8 @@ class CUSUM_UCB(UCB):
                 print('------> detected change <------- for the product', i)
                 print('--------------------------------')
                 print('--------------------------------')
+                self.detections[i][int(pulled_arm[i])].append(self.time)
                 self.reset_product(i)
-                self.detections[int(pulled_arm[i])].append(self.t)
 
             # per analizzare andamento
             for arm in range(4):
@@ -98,5 +105,8 @@ class CUSUM_UCB(UCB):
             self.detector[product][arm].reset()
         # self.tot_clicks[arm] = 0
         # self.tot_sales[arm] = 0
-        self.expected_rewards[product] = 0
+        self.expected_rewards[product] = np.zeros(self.n_arms)
+        self.counter_per_arm[product] = np.zeros(self.n_arms)
+
+        self.t = 0
 

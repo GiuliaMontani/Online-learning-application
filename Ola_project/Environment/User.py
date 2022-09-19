@@ -53,7 +53,7 @@ class User0(User):
                                                                          size=5)*self.scale
         # uncertain weight of the graph
         if fixed_weights != 1:
-            self.P = User.generate_graph(self, np.random.uniform(0, 0.5, size=(5, 5)))  # lower influence probabilities
+            self.P = User.generate_graph(self, np.random.uniform(0.2, 1, size=(5, 5)))  # lower influence probabilities
         # known weight of the graph
         else:
             self.P = User.generate_graph(self,
@@ -112,7 +112,7 @@ class User2(User):
         self.reservation_price = self.avg_reservation_price + np.random.normal(0, scale=1, size=5)*self.scale
         if fixed_weights != 1:
             self.P = User.generate_graph(self,
-                                         np.random.uniform(0, 1, size=(5, 5)))  # more variable influence probabilities
+                                         np.random.uniform(0.2, 1, size=(5, 5)))  # more variable influence probabilities
         else:
             self.P = User.generate_graph(self,
                                          np.array([[0.1612583, 0.02990957, 0.0215376, 0.27068635, 0.25147687],
@@ -125,7 +125,7 @@ class User2(User):
 # homogenous user class (used in the first steps)
 class HomogeneousUsers(User):
     alpha = [0.2, 0.2, 0.2, 0.2, 0.2]
-    avg_reservation_price = np.multiply([0.3, 0.3, 0.3, 0.3, 0.3],[25, 37, 34, 48, 104]) + np.multiply([0.4, 0.4, 0.4, 0.4, 0.4], [23, 34, 30, 46, 95]) + np.multiply([0.3, 0.3, 0.3, 0.3, 0.3],[21, 31, 28, 42, 87])
+    avg_reservation_price = np.multiply([0.3, 0.3, 0.3, 0.3, 0.3],[23, 34, 31, 46, 104]) + np.multiply([0.4, 0.4, 0.4, 0.4, 0.4], [21, 32, 29, 44, 95]) + np.multiply([0.3, 0.3, 0.3, 0.3, 0.3],[21, 31, 28, 42, 87])
     scale = np.array([1.5, 2, 1.7, 2.5, 4])
     def __init__(self, primary, fixed_weights):
         User.__init__(self, primary)

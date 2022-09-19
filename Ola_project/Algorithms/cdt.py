@@ -1,5 +1,5 @@
 import math
-
+import numpy as np
 
 class CDT:
     def __init__(self, ):
@@ -43,7 +43,7 @@ class CUSUM:
         :param reward that has to be analysed by the CDT
         :return: a CDT_Result that contains the alarm and the estimated timestep change
         """
-        print('running CUSUM algorithm')
+        #print('running CUSUM algorithm')
         #print('reward: ', reward)
 
         self.n_rewards += 1
@@ -55,7 +55,7 @@ class CUSUM:
 
         if self.n_rewards <= self.M:
             self.change_estimate = self.n_rewards + 1
-            print('troppo presto')
+            #print('troppo presto')
             return False  # too early to detect something
 
         else:  # if i have enough data to say something
@@ -125,6 +125,7 @@ class CUSUM2:
         self.epsilon = epsilon
         self.threshold = threshold
         self.mean_over_M = 0
+        self.stima = []
 
         self.g_increase = 0
         self.g_decrease = 0
@@ -142,14 +143,17 @@ class CUSUM2:
         :param reward that has to be analysed by the CDT
         :return: a CDT_Result that contains the alarm and the estimated timestep change
         """
-        #print('running CUSUM algorithm')
+        print('running CUSUM algorithm')
         self.n_rewards += 1
         if self.n_rewards <= self.M:  # if the step time is smaller than n. of initialization steps
             self.mean_over_M += n_buy/n_cliks
+            self.stima.append(n_buy/n_cliks)
 
         if self.n_rewards == self.M:
             self.mean_over_M /= self.M
             print("the mean over M steps is:", self.mean_over_M)
+            print("std:",np.std(self.stima))
+            #self.epsilon =np.std(self.stima)*3
 
         if self.n_rewards <= self.M:
             self.change_estimate = self.n_rewards + 1
@@ -162,14 +166,14 @@ class CUSUM2:
 
             print('mean_over_M: ', self.mean_over_M)
             for i in range(n_buy):
-                s_increase = (1 - self.mean_over_M) - self.epsilon  # (1 - average value we should obtain) - variation
-                s_decrease = -(1 - self.mean_over_M) - self.epsilon
+                s_increase = (1 - self.mean_over_M) - self.epsilon #(1 - average value we should obtain) - accepted variation
+                s_decrease = -(1 - self.mean_over_M) - (self.epsilon*5)
                 self.g_increase = max(0, self.g_increase + s_increase)
                 self.g_decrease = max(0, self.g_decrease + s_decrease)
 
             for j in range(n_cliks - n_buy):
                 s_increase = (0 - self.mean_over_M) - self.epsilon
-                s_decrease = -(0 - self.mean_over_M) - self.epsilon
+                s_decrease = -(0 - self.mean_over_M) - (self.epsilon*5)
                 self.g_increase = max(0, self.g_increase + s_increase)
                 self.g_decrease = max(0, self.g_decrease + s_decrease)
 
